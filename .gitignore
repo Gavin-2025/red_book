@@ -8,6 +8,11 @@ build/
 develop-eggs/
 dist/
 downloads/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
 eggs/
 .eggs/
 lib/

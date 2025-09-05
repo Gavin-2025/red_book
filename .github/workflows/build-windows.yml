@@ -1,9 +1,7 @@
 name: Build Windows Executable
 
-    - name: Build executable
-      run: |
-        pyinstaller --onefile --console --name="redbook2.0" --add-data="示例数据模板.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
-  workflow_dispatch:  # 允许手动触发
+on:
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -34,7 +32,7 @@ jobs:
     
     - name: Build executable
       run: |
-        pyinstaller --onefile --console --name="redbook2.0" --add-data="示例数据模板.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
+        pyinstaller --onefile --console --name="redbook2.0" --add-data="data_template.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
