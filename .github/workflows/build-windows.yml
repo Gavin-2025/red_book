@@ -1,9 +1,8 @@
 name: Build Windows Executable
 
-on:
-  push:
-    tags:
-      - 'v*'
+    - name: Build executable
+      run: |
+        pyinstaller --onefile --console --name="redbook2.0" --add-data="示例数据模板.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -33,119 +32,13 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     
-    - name: Verify files
-      run: |
-        echo "当前目录内容:"
-        dir
-        echo "检查关键文件:"
-        if (Test-Path "advanced_evaluator.py") { echo "✅ advanced_evaluator.py 存在" } else { echo "❌ advanced_evaluator.py 不存在" }
-        if (Test-Path "示例数据模板.csv") { echo "✅ 示例数据模板.csv 存在" } else { echo "❌ 示例数据模板.csv 不存在" }
-      shell: powershell
-    
     - name: Build executable
       run: |
-        pyinstaller --onefile --console --name="小红书达人评估系统_v2.0" --add-data="示例数据模板.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
-    
-    - name: Verify build
-      run: |
-        echo "构建结果:"
-        dir dist
-        if (Test-Path "dist/小红书达人评估系统_v2.0.exe") { 
-          echo "✅ EXE 文件构建成功" 
-          $size = (Get-Item "dist/小红书达人评估系统_v2.0.exe").Length
-          echo "📦 文件大小: $([math]::Round($size/1MB, 2)) MB"
-        } else { 
-          echo "❌ EXE 文件构建失败" 
-          exit 1
-        }
-      shell: powershell
+        pyinstaller --onefile --console --name="redbook2.0" --add-data="示例数据模板.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: windows-executable
-        path: dist/小红书达人评估系统_v2.0.exe
+        path: dist/redbook2.0.exe
         retention-days: 30
-    
-    - name: Create Windows usage guide
-      run: |
-        echo "# 小红书达人评估系统 v2.0 - Windows 版本" > Windows使用说明.txt
-        echo "" >> Windows使用说明.txt
-        echo "## 🚀 快速开始" >> Windows使用说明.txt
-        echo "1. 双击运行 '小红书达人评估系统_v2.0.exe'" >> Windows使用说明.txt
-        echo "2. 等待系统启动（首次启动需要10-30秒）" >> Windows使用说明.txt
-        echo "3. 系统会自动在浏览器中打开" >> Windows使用说明.txt
-        echo "4. 开始使用达人评估功能" >> Windows使用说明.txt
-        echo "" >> Windows使用说明.txt
-        echo "## ⚠️ 注意事项" >> Windows使用说明.txt
-        echo "- 首次运行可能被杀毒软件拦截，请添加信任" >> Windows使用说明.txt
-        echo "- 关闭控制台窗口将停止服务" >> Windows使用说明.txt
-        echo "- 如未自动打开浏览器，请访问控制台显示的网址" >> Windows使用说明.txt
-        echo "" >> Windows使用说明.txt
-        echo "## 📊 功能说明" >> Windows使用说明.txt
-        echo "- 单个达人评估：输入达人数据进行评估" >> Windows使用说明.txt
-        echo "- 批量达人评估：上传CSV文件批量评估" >> Windows使用说明.txt
-        echo "- 数据分析对比：多个达人数据对比分析" >> Windows使用说明.txt
-        echo "" >> Windows使用说明.txt
-        echo "构建时间: $(Get-Date)" >> Windows使用说明.txt
-      shell: powershell
-    
-    - name: Upload usage guide
-      uses: actions/upload-artifact@v4
-      with:
-        name: usage-guide
-        path: Windows使用说明.txt
-    
-    - name: Create Release (if tag)
-      if: startsWith(github.ref, 'refs/tags/')
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: 小红书达人评估系统 ${{ github.ref }}
-        body: |
-          ## 🎯 小红书达人评估系统 Windows 版本
-          
-          ### ✨ 主要功能
-          - 💎 专业五维度评估体系
-          - 📊 单个/批量达人评估
-          - 📈 数据可视化分析
-          - 📋 CSV文件导入导出
-          
-          ### 📥 下载说明
-          1. 下载 `小红书达人评估系统_v2.0.exe`
-          2. 下载 `Windows使用说明.txt`（使用指南）
-          3. 双击运行exe文件即可使用
-          
-          ### 📋 系统要求
-          - Windows 10/11 64位系统
-          - 无需安装Python环境
-          
-          ### 🔒 安全提示
-          首次运行可能被杀毒软件拦截，请添加信任后使用。
-        draft: false
-        prerelease: false
-    
-    - name: Upload Release Asset - Executable
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/小红书达人评估系统_v2.0.exe
-        asset_name: 小红书达人评估系统_v2.0.exe
-        asset_content_type: application/octet-stream
-    
-    - name: Upload Release Asset - Guide
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: Windows使用说明.txt
-        asset_name: Windows使用说明.txt
-        asset_content_type: text/plain
