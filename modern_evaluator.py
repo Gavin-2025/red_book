@@ -300,19 +300,19 @@ st.markdown("### 📋 选择评估模式")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    if st.button("🎯 单个评估", use_container_width=True):
+    if st.button("🎯 单个评估", width="stretch"):
         st.session_state.current_mode = "单个评估"
 
 with col2:
-    if st.button("📊 批量评估", use_container_width=True):
+    if st.button("📊 批量评估", width="stretch"):
         st.session_state.current_mode = "批量评估"
 
 with col3:
-    if st.button("📈 数据对比", use_container_width=True):
+    if st.button("📈 数据对比", width="stretch"):
         st.session_state.current_mode = "数据对比"
 
 with col4:
-    if st.button("⚙️ 系统设置", use_container_width=True):
+    if st.button("⚙️ 系统设置", width="stretch"):
         st.session_state.current_mode = "系统设置"
 
 st.markdown("---")
@@ -468,7 +468,7 @@ if st.session_state.current_mode == "单个评估":
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🎯 开始评估", use_container_width=True, type="primary"):
+        if st.button("🎯 开始评估", width="stretch", type="primary"):
             # 计算各维度得分
             content_score = (
                 score_content_focus(vertical_ratio) * 0.35 +
@@ -596,7 +596,7 @@ if st.session_state.current_mode == "单个评估":
                 height=500
             )
             
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             
             # 保存评估结果
             result = {
@@ -671,7 +671,7 @@ elif st.session_state.current_mode == "批量评估":
                 
                 # 显示数据预览
                 st.markdown("#### 📋 数据预览")
-                st.dataframe(df.head(), use_container_width=True)
+                st.dataframe(df.head(), width="stretch")
                 
                 if st.button("🚀 开始批量评估", type="primary"):
                     # 批量评估逻辑
@@ -785,7 +785,7 @@ elif st.session_state.current_mode == "批量评估":
                     # 显示批量结果
                     st.markdown("#### 🎯 批量评估结果")
                     results_df = pd.DataFrame(results)
-                    st.dataframe(results_df, use_container_width=True)
+                    st.dataframe(results_df, width="stretch")
                     
                     # 导出功能
                     csv = results_df.to_csv(index=False, encoding='utf-8-sig')
@@ -831,14 +831,14 @@ elif st.session_state.current_mode == "数据对比":
                                   title="评分分布直方图",
                                   color_discrete_sequence=['#ff6b6b'])
             fig_hist.update_layout(height=400)
-            st.plotly_chart(fig_hist, use_container_width=True)
+            st.plotly_chart(fig_hist, width="stretch")
         
         with col2:
             fig_scatter = px.scatter(df_results, x='粉丝数', y='综合评分',
                                    hover_data=['达人昵称'], title="粉丝数vs评分散点图",
                                    color_discrete_sequence=['#4ecdc4'])
             fig_scatter.update_layout(height=400)
-            st.plotly_chart(fig_scatter, use_container_width=True)
+            st.plotly_chart(fig_scatter, width="stretch")
         
         with st.container():
             st.markdown('<div class="metric-card">', unsafe_allow_html=True)
@@ -887,12 +887,12 @@ elif st.session_state.current_mode == "数据对比":
                         height=600
                     )
                     
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
                 
                 # 对比表格
                 st.markdown("#### 📊 详细数据对比")
                 compare_df = pd.DataFrame(selected_data)
-                st.dataframe(compare_df, use_container_width=True)
+                st.dataframe(compare_df, width="stretch")
             
             st.markdown('</div>', unsafe_allow_html=True)
     
@@ -960,7 +960,7 @@ elif st.session_state.current_mode == "系统设置":
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("🗑️ 清空评估记录", use_container_width=True):
+            if st.button("🗑️ 清空评估记录", width="stretch"):
                 st.session_state.evaluation_results = []
                 st.success("评估记录已清空")
         
@@ -972,7 +972,7 @@ elif st.session_state.current_mode == "系统设置":
                     data=csv_data,
                     file_name=f"评估记录_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv",
-                    use_container_width=True
+                    width="stretch"
                 )
         
         st.markdown('</div>', unsafe_allow_html=True)
