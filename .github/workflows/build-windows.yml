@@ -2,6 +2,11 @@ name: Build Windows Executable
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'modern_evaluator.py'
+      - 'requirements.txt'
 
 jobs:
   build-windows:
@@ -30,13 +35,24 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     
-    - name: Build executable
+    - name: Build executable from modern_evaluator
+      run: |
+        pyinstaller --onefile --windowed --name="redbook-modern-v3.0" --add-data="data_template.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow modern_evaluator.py
+    
+    - name: Upload modern executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: redbook-modern-windows-executable
+        path: dist/redbook-modern-v3.0.exe
+        retention-days: 30
+
+    - name: Build executable from advanced_evaluator (legacy)
       run: |
         pyinstaller --onefile --console --name="redbook2.0" --add-data="data_template.csv;." --hidden-import=streamlit --hidden-import=streamlit.web.cli --hidden-import=streamlit.web.server --hidden-import=streamlit.web.server.server --hidden-import=pandas --hidden-import=plotly --hidden-import=plotly.graph_objects --hidden-import=plotly.express --hidden-import=numpy --hidden-import=openpyxl --hidden-import=altair --hidden-import=pyarrow advanced_evaluator.py
     
-    - name: Upload artifact
+    - name: Upload legacy executable
       uses: actions/upload-artifact@v4
       with:
-        name: windows-executable
+        name: redbook-legacy-windows-executable
         path: dist/redbook2.0.exe
         retention-days: 30
